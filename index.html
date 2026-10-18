@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Fun Quiz – Lớp 5 (Unit 1–5)</title>
+<style>
+  :root{--bg:#fff8e7;--card:#fff;--pri:#ff7a59;--sec:#4cc9f0;--yel:#ffd166;--ok:#2ec27e;--bad:#e5484d;--txt:#2b2d42;--mut:#7a7f99}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Comic Sans MS","Trebuchet MS",system-ui,sans-serif;background:radial-gradient(circle at 10% 10%,#ffe3b3 0,transparent 40%),radial-gradient(circle at 90% 20%,#c9f2ff 0,transparent 40%),var(--bg);color:var(--txt);min-height:100vh}
+  header{text-align:center;padding:24px 12px 8px}
+  h1{margin:0;font-size:2rem;color:var(--pri);text-shadow:2px 2px 0 var(--yel)}
+  .sub{color:var(--mut);margin-top:4px}
+  .wrap{max-width:860px;margin:0 auto;padding:12px}
+  .tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+  .tab{border:none;padding:10px 18px;border-radius:999px;font:inherit;font-weight:bold;cursor:pointer;background:#fff;color:var(--txt);box-shadow:0 3px 0 #e5d9bf}
+  .tab.active{background:var(--sec);color:#fff;box-shadow:0 3px 0 #2a9dc0}
+  .card{background:var(--card);border-radius:22px;padding:20px;margin:14px 0;box-shadow:0 6px 0 #f0e2c4,0 10px 24px rgba(0,0,0,.06)}
+  .card h3{margin:0 0 10px;font-size:1.1rem}
+  .num{display:inline-block;background:var(--yel);border-radius:10px;padding:2px 10px;margin-right:6px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:600px){.opts{grid-template-columns:1fr}}
+  .opt,.word,.btn{font:inherit;border:2px solid #e8e1d0;background:#fffdf7;border-radius:14px;padding:10px 14px;cursor:pointer;transition:.15s}
+  .opt:hover,.word:hover{transform:translateY(-2px);border-color:var(--sec)}
+  .ok{background:#dff7ea!important;border-color:var(--ok)!important;color:#11683f}
+  .bad{background:#fde3e4!important;border-color:var(--bad)!important;color:#9b1c20}
+  .fb{margin-top:10px;font-weight:bold;min-height:1.4em}
+  .fb.ok{background:none!important;color:var(--ok)}.fb.bad{background:none!important;color:var(--bad)}
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .col{display:flex;flex-direction:column;gap:8px}
+  .sel{border-color:var(--pri)!important;background:#fff0ea!important}
+  .done{opacity:.85;pointer-events:none}
+  .pool,.answer{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:8px;border-radius:14px}
+  .answer{border:2px dashed var(--sec);background:#f2fbff;margin-bottom:8px}
+  .word{padding:8px 12px;background:var(--yel);border-color:#f2bd3d}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{background:var(--sec);border-color:var(--sec);color:#fff;font-weight:bold}
+  .btn.alt{background:#fff;color:var(--txt);border-color:#e8e1d0}
+  .btn.big{background:var(--pri);border-color:var(--pri);font-size:1.15rem;padding:14px 28px;box-shadow:0 4px 0 #d85a3b}
+  input[type=text]{font:inherit;padding:10px 12px;border-radius:12px;border:2px solid #e8e1d0;flex:1;min-width:160px}
+  .sent .w{cursor:pointer;padding:2px 4px;border-radius:6px;display:inline-block}
+  .sent .w:hover{background:#fff3c4}
+  .sent{font-size:1.15rem;line-height:2}
+  .score{position:sticky;top:0;z-index:5;background:var(--txt);color:#fff;text-align:center;padding:8px;font-weight:bold;border-radius:0 0 16px 16px;max-width:420px;margin:0 auto}
+  .center{text-align:center}
+  #toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) scale(0);font-size:2.4rem;font-weight:bold;padding:18px 34px;border-radius:24px;color:#fff;transition:.25s;pointer-events:none;z-index:20}
+  #toast.show{transform:translate(-50%,-50%) scale(1)}
+  #result{display:none}
+  .stars{font-size:3rem}
+</style>
+</head>
+<body>
+<div class="score" id="scorebar">⭐ Điểm: 0 / 0</div>
+<header>
+  <h1>🎒 English Fun Quiz</h1>
+  <div class="sub">Ôn tập Tiếng Anh Lớp 5 – Global Success – Unit 1 → 5</div>
+</header>
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" data-p="p1">🧩 Phần 1: Nối & Chọn</button>
+    <button class="tab" data-p="p2">✏️ Phần 2: Sắp xếp & Sửa lỗi</button>
+  </div>
+  <section id="p1"></section>
+  <section id="p2" hidden></section>
+  <section id="review" hidden></section>
+  <div class="center" style="margin:24px 0">
+    <button class="btn big" id="finish">🏆 Tính điểm & Tổng kết</button>
+    <button class="btn" id="retry" style="margin-left:8px">🔁 Làm lại câu sai</button>
+    <button class="btn alt" id="reset" style="margin-left:8px">🔄 Làm lại</button>
+  </div>
+  <div class="card center" id="result"></div>
+</div>
+<div id="toast"></div>
+<script>
+const MATCH=[
+ ["What's your address?","It's 93 Oxford Street."],
+ ["What nationality is she?","She's British."],
+ ["What would you like to be in the future?","I'd like to be a doctor."],
+ ["Why would you like to be a doctor?","Because I'd like to help people."],
+ ["What do you like doing in your free time?","I like reading books."]
+];
+const MCQ=[
+ {q:"A: Where do you live? – B: ______",o:["I live in a flat in Ha Noi.","I'm Vietnamese.","I like swimming.","It's big."],a:0},
+ {q:"A: What nationality is Tom? – B: ______",o:["He's from London.","He's British.","He's ten.","He's tall."],a:1},
+ {q:"A: What's your friend like? – B: ______",o:["She likes cooking.","She's Japanese.","She's kind and friendly.","She lives in Tokyo."],a:2},
+ {q:"A: What does your father do in his free time? – B: He ______ fishing.",o:["go","goes","going","to go"],a:1},
+ {q:"A: Why would you like to be a teacher? – B: ______",o:["Because I'd like to teach children.","At the school.","I'm a teacher.","Yes, I would."],a:0},
+ {q:"A: Where's he from? – B: He's from ______.",o:["Australian","Australia","Japanese","British"],a:1},
+ {q:"A: What would you like to be? – B: I'd like to be a ______. I want to fly a plane.",o:["farmer","nurse","pilot","cook"],a:2},
+ {q:"A: Is your house big? – B: ______",o:["Yes, it does.","No, it isn't. It's small.","Yes, I am.","It's in the city."],a:1},
+ {q:"A: What's your address? – B: ______",o:["It's 15 Le Loi Street.","I'm from Viet Nam.","It's a big city.","Yes, it is."],a:0},
+ {q:"A: Do you live in a flat? – B: ______",o:["Yes, I am.","No, I don't. I live in a house.","No, it isn't.","I live with my parents."],a:1},
+ {q:"A: Where does your grandmother live? – B: ______",o:["She lives in a village.","She's Vietnamese.","She likes gardening.","She's sixty."],a:0},
+ {q:"A: What's the village like? – B: ______",o:["It's on the hill.","It's quiet and beautiful.","I like it.","It's 20 Hill Road."],a:1},
+ {q:"A: Where are you from? – B: ______",o:["I'm Japanese.","I'm from Japan.","I live in Japan Street.","I'm fine."],a:1},
+ {q:"A: What nationality are they? – B: ______",o:["They're American.","They're from America.","They're students.","They're happy."],a:0},
+ {q:"A: Is she Malaysian? – B: ______",o:["Yes, she does.","No, she isn't. She's Thai.","No, she doesn't.","Yes, he is."],a:1},
+ {q:"A: What's your best friend like? – B: ______",o:["He's clever and funny.","He likes football.","He's from Australia.","He's a pupil in class 5A."],a:0},
+ {q:"A: What do you like doing in your free time? – B: ______",o:["I like play chess.","I like playing chess.","I playing chess.","I am chess."],a:1},
+ {q:"A: What does your mother do in her free time? – B: She ______.",o:["cooks","cook","cooking","is cook"],a:0},
+ {q:"A: Do you like watching TV? – B: ______",o:["Yes, I am.","Yes, I do.","No, I'm not.","Yes, I like."],a:1},
+ {q:"A: How often do you go swimming? – B: ______",o:["At the pool.","Twice a week.","With my friends.","Yes, I do."],a:1},
+ {q:"A: What would you like to be in the future? – B: ______",o:["I'd like to be a farmer.","I like farmers.","I'm a farmer.","I'd like being farmer."],a:0},
+ {q:"A: Why would you like to be a firefighter? – B: ______",o:["Because I'd like to grow vegetables.","Because I'd like to put out fires.","Because I'd like to fly a plane.","Because I'd like to cook."],a:1},
+ {q:"A: Why would you like to be a vet? – B: Because I'd like to look after ______.",o:["patients","children","animals","plants"],a:2},
+ {q:"A: Would you like to be a singer? – B: ______",o:["Yes, I would.","Yes, I do.","Yes, I am.","Yes, I like."],a:0},
+ {q:"A: What does your father do? – B: ______",o:["He's an engineer.","He's British.","He likes fishing.","He's in the garden."],a:0},
+ {q:"A: Where does a nurse work? – B: ______",o:["In a school.","In a hospital.","On a farm.","In a kitchen."],a:1},
+ {q:"A: What did you do yesterday? – B: I ______ my grandparents.",o:["visit","visits","visited","visiting"],a:2},
+ {q:"A: Where did you go last summer? – B: I ______ to Ha Long Bay.",o:["go","went","goed","going"],a:1}
+];
+const ORDER=[
+ "Where do you live ?",
+ "What nationality is she ?",
+ "I'd like to be a doctor in the future .",
+ "My brother likes playing football in his free time .",
+ "Why would you like to be a nurse ?",
+ "Her address is 25 Tran Phu Street ."
+];
+const ERR=[
+ {s:"My mother buyed a new dress yesterday .",w:"buyed",c:"bought"},
+ {s:"She like reading comic books .",w:"like",c:"likes"},
+ {s:"He is from Japan . He is Japan .",w:"Japan",i:6,c:"Japanese"},
+ {s:"What do your sister do in her free time ?",w:"do",i:1,c:"does"},
+ {s:"I'd like to being a firefighter .",w:"being",c:"be"},
+ {s:"Mai and Linh lives in a big house .",w:"lives",c:"live"}
+];
+let st={};
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const TOTAL=MATCH.length+MCQ.length+ORDER.length+ERR.length;
+let ac;
+function beep(ok){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const notes=ok?[523,659,784]:[300,220];notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=ok?"triangle":"sawtooth";o.frequency.value=f;g.gain.setValueAtTime(.15,ac.currentTime+i*.12);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+i*.12+.2);o.connect(g).connect(ac.destination);o.start(ac.currentTime+i*.12);o.stop(ac.currentTime+i*.12+.22)})}catch(e){}}
+function toast(ok){const t=$("#toast"),p=ok?["Well done! 🎉","Great job! 🌟","Excellent! 👏"]:["Try again! 💪","Oops! 🙈"];t.textContent=p[Math.random()*p.length|0];t.style.background=ok?"var(--ok)":"var(--bad)";t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),900);beep(ok)}
+function mark(key,ok){if(st.ans[key]!==undefined)return;st.ans[key]=ok;if(ok)st.score++;upd()}
+function upd(){$("#scorebar").textContent=`⭐ Điểm: ${st.score} / ${Object.keys(st.ans).length} (Tổng ${TOTAL} câu)`}
+function fb(el,ok,msg){el.className="fb "+(ok?"ok":"bad");el.textContent=msg}
+
+function renderP1(){
+ const p=$("#p1");p.innerHTML="";
+ // Matching
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<h3><span class="num">A</span>Nối câu hỏi với câu trả lời phù hợp (bấm 1 câu hỏi rồi bấm 1 câu trả lời)</h3><div class="match"><div class="col" id="mq"></div><div class="col" id="ma"></div></div><div class="fb" id="mfb"></div>`;
+ p.appendChild(c);
+ let selQ=null;
+ MATCH.forEach((m,i)=>{const b=document.createElement("button");b.className="opt";b.textContent=m[0];b.onclick=()=>{document.querySelectorAll("#mq .opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");selQ=i};c.querySelector("#mq").appendChild(b);b.dataset.i=i});
+ shuffle(MATCH.map((m,i)=>i)).forEach(i=>{const b=document.createElement("button");b.className="opt";b.textContent=MATCH[i][1];b.onclick=()=>{if(selQ===null)return;const qb=c.querySelector(`#mq .opt[data-i="${selQ}"]`);const ok=selQ===i;if(ok){qb.className="opt ok done";b.className="opt ok done";fb(c.querySelector("#mfb"),true,"✔ Đúng rồi!")}else{b.classList.add("bad");qb.classList.add("bad");setTimeout(()=>{b.classList.remove("bad");qb.classList.remove("bad")},600);fb(c.querySelector("#mfb"),false,"✘ Chưa đúng, thử lại nhé!")}
+  mark("m"+selQ,ok&&!st.tried["m"+selQ]);if(!ok)st.tried["m"+selQ]=1;if(ok){qb.classList.remove("sel");selQ=null}toast(ok)};c.querySelector("#ma").appendChild(b)});
+ // MCQ
+ MCQ.forEach((m,i)=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<h3><span class="num">${i+1}</span>${m.q}</h3><div class="opts"></div><div class="fb"></div>`;
+  m.o.forEach((o,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=String.fromCharCode(65+j)+". "+o;b.onclick=()=>{if(st.ans["q"+i]!==undefined)return;const ok=j===m.a;b.classList.add(ok?"ok":"bad");d.querySelectorAll(".opt")[m.a].classList.add("ok");fb(d.querySelector(".fb"),ok,ok?"✔ Well done!":"✘ Đáp án đúng: "+String.fromCharCode(65+m.a));mark("q"+i,ok);toast(ok)};d.querySelector(".opts").appendChild(b)});
+  p.appendChild(d)});
+}
+
+function renderP2(){
+ const p=$("#p2");p.innerHTML=`<div class="card"><h3>🔀 Sắp xếp từ thành câu đúng</h3><div class="sub">Bấm (hoặc kéo thả) các từ vào khung, hoặc gõ câu vào ô bên dưới.</div></div>`;
+ ORDER.forEach((s,i)=>{const words=s.split(" ");let sh;do{sh=shuffle(words)}while(sh.join(" ")===s);
+  const d=document.createElement("div");d.className="card";d.innerHTML=`<h3><span class="num">${i+1}</span>${sh.join(" / ")}</h3><div class="answer"></div><div class="pool"></div><div class="row"><input type="text" placeholder="Hoặc gõ câu ở đây..."><button class="btn">Kiểm tra</button><button class="btn alt">Xóa</button></div><div class="fb"></div>`;
+  const ans=d.querySelector(".answer"),pool=d.querySelector(".pool");
+  const mk=w=>{const e=document.createElement("span");e.className="word";e.textContent=w;e.draggable=true;e.onclick=()=>{(e.parentNode===pool?ans:pool).appendChild(e)};e.ondragstart=ev=>{window._drag=e};return e};
+  sh.forEach(w=>pool.appendChild(mk(w)));
+  [ans,pool].forEach(z=>{z.ondragover=e=>e.preventDefault();z.ondrop=e=>{e.preventDefault();if(window._drag&&d.contains(window._drag))z.appendChild(window._drag)}});
+  const [chk,clr]=d.querySelectorAll(".btn");const inp=d.querySelector("input");
+  clr.onclick=()=>{[...ans.children].forEach(x=>pool.appendChild(x));inp.value=""};
+  const norm=t=>t.toLowerCase().replace(/\s+([?.!,])/g,"$1").replace(/\s+/g," ").trim();
+  chk.onclick=()=>{const typed=inp.value.trim()||[...ans.children].map(x=>x.textContent).join(" ");if(!typed)return;const ok=norm(typed)===norm(s);
+   ans.classList.remove("ok","bad");ans.classList.add(ok?"ok":"bad");fb(d.querySelector(".fb"),ok,ok?"✔ Well done! "+s.replace(/ ([?.])/,"$1"):"✘ Try again!");
+   mark("o"+i,ok&&!st.tried["o"+i]);if(!ok)st.tried["o"+i]=1;toast(ok);if(ok)d.classList.add("done")};
+  p.appendChild(d)});
+ const h=document.createElement("div");h.className="card";h.innerHTML=`<h3>🔍 Tìm và sửa lỗi sai</h3><div class="sub">Bấm vào từ sai trong câu, sau đó gõ từ đúng.</div>`;p.appendChild(h);
+ ERR.forEach((e,i)=>{const toks=e.s.split(" ");const wi=e.i!==undefined?e.i:toks.indexOf(e.w);
+  const d=document.createElement("div");d.className="card";d.innerHTML=`<h3><span class="num">${i+1}</span>Câu có 1 lỗi sai:</h3><div class="sent"></div><div class="row" hidden><input type="text" placeholder="Từ đúng là..."><button class="btn">Kiểm tra</button></div><div class="fb"></div>`;
+  const sent=d.querySelector(".sent"),row=d.querySelector(".row");let found=false;
+  toks.forEach((t,k)=>{const sp=document.createElement("span");sp.className="w";sp.textContent=t;sp.onclick=()=>{if(found)return;if(k===wi){found=true;sp.classList.add("bad");row.hidden=false;fb(d.querySelector(".fb"),true,"👍 Đúng là từ này sai! Hãy sửa lại.");d.querySelector("input").focus()}else{sp.classList.add("bad");setTimeout(()=>sp.classList.remove("bad"),500);st.tried["e"+i]=1;fb(d.querySelector(".fb"),false,"✘ Từ này không sai, thử lại!");toast(false)}};sent.appendChild(sp);sent.append(" ")});
+  d.querySelector(".btn").onclick=()=>{const v=d.querySelector("input").value.trim().toLowerCase();if(!v)return;const ok=v===e.c.toLowerCase();
+   if(ok){const sp=sent.querySelectorAll(".w")[wi];sp.className="w ok";sp.textContent=e.c;row.hidden=true;d.classList.add("done")}
+   fb(d.querySelector(".fb"),ok,ok?`✔ Well done! ${e.w} → ${e.c}`:"✘ Try again!");mark("e"+i,ok&&!st.tried["e"+i]);if(!ok)st.tried["e"+i]=1;toast(ok)};
+  p.appendChild(d)});
+}
+
+function init(){st={score:0,ans:{},tried:{}};renderP1();renderP2();upd();$("#result").style.display="none"}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");$("#review").hidden=true;$("#p1").hidden=t.dataset.p!=="p1";$("#p2").hidden=t.dataset.p!=="p2"});
+$("#finish").onclick=()=>{const done=Object.keys(st.ans).length,pct=Math.round(st.score/TOTAL*100);const stars=pct>=90?"⭐⭐⭐":pct>=60?"⭐⭐":pct>=30?"⭐":"💪";
+ const msg=pct>=90?"Excellent! Em giỏi quá!":pct>=60?"Good job! Cố gắng thêm chút nữa nhé!":"Keep trying! Ôn lại và làm lại nhé!";
+ const r=$("#result");r.style.display="block";r.innerHTML=`<div class="stars">${stars}</div><h2>Kết quả: ${st.score} / ${TOTAL} câu đúng (${pct}%)</h2><p>Đã làm: ${done}/${TOTAL} câu · Đúng ngay lần đầu mới được tính điểm.</p><h3>${msg}</h3>`;r.scrollIntoView({behavior:"smooth"});beep(pct>=60)};
+$("#reset").onclick=()=>{init();scrollTo({top:0,behavior:"smooth"})};
+const MATCH_EX=["Hỏi địa chỉ (address) → trả lời bằng số nhà + tên đường.","Hỏi quốc tịch (nationality) → dùng tính từ quốc tịch: British.","Hỏi ước mơ → I'd like to be + nghề.","Hỏi Why → trả lời bằng Because...","Hỏi sở thích lúc rảnh → I like + V-ing."];
+const MCQ_EX=["Where do you live? hỏi nơi ở → I live in...","Nationality → tính từ quốc tịch (British), không dùng 'from'.","What's ... like? hỏi tính cách → kind, friendly.","Chủ ngữ He (số ít) ở thì hiện tại đơn → động từ thêm -es: goes.","Why → trả lời Because + lý do.","Sau 'from' dùng tên nước: Australia.","Lái máy bay (fly a plane) → pilot (phi công).","Câu hỏi Is...? → trả lời Yes, it is / No, it isn't.","Address → số nhà + tên đường.","Câu hỏi Do you...? → Yes, I do / No, I don't.","Where does ... live? → She lives in...","What's ... like? hỏi đặc điểm → quiet and beautiful.","Where are you from? → I'm from + tên nước.","Nationality → tính từ quốc tịch: American.","Is she...? → No, she isn't. Chú ý dùng 'she'.","What's ... like? hỏi tính cách → clever and funny.","like + V-ing: playing.","She (số ít), hiện tại đơn → cooks.","Do you...? → Yes, I do.","How often hỏi tần suất → twice a week.","What would you like to be? → I'd like to be a...","Firefighter (lính cứu hỏa) → put out fires (dập lửa).","Vet (bác sĩ thú y) → chăm sóc animals.","Would you...? → Yes, I would.","What does he do? hỏi nghề nghiệp → He's an engineer.","Nurse (y tá) làm ở hospital.","Yesterday → quá khứ đơn: visited.","Last summer → quá khứ đơn, go là bất quy tắc → went."];
+const ERR_EX=["Yesterday → quá khứ; buy là động từ bất quy tắc → bought.","She (số ít), hiện tại đơn → likes.","Sau 'He is' chỉ quốc tịch → Japanese (Japan là tên nước).","Chủ ngữ 'your sister' số ít → does.","I'd like to + động từ nguyên mẫu → be.","Mai and Linh (số nhiều) → live."];
+function wrongList(){return Object.keys(st.ans).filter(k=>st.ans[k]===false)}
+function renderReview(){
+ const keys=wrongList(),r=$("#review");r.innerHTML="";r.hidden=false;$("#p1").hidden=$("#p2").hidden=true;
+ r.innerHTML=`<div class="card center"><h3>🔁 Làm lại câu sai (${keys.length} câu)</h3>${keys.length?'<div class="sub">Làm lại rồi xem đáp án đúng và giải thích.</div>':'<h3>🎉 Em không có câu sai nào!</h3>'}<div class="row" style="justify-content:center"><button class="btn alt" id="back">⬅ Quay lại bài</button></div></div>`;
+ r.querySelector("#back").onclick=()=>{r.hidden=true;document.querySelector(".tab.active").click()};
+ keys.forEach((k,n)=>{const t=k[0],i=+k.slice(1);const d=document.createElement("div");d.className="card";let q,opts=null,ans,ex;
+  if(t==="m"){q=MATCH[i][0];opts=shuffle(MATCH.map(m=>m[1]));ans=MATCH[i][1];ex=MATCH_EX[i]}
+  else if(t==="q"){q=MCQ[i].q;opts=MCQ[i].o;ans=MCQ[i].o[MCQ[i].a];ex=MCQ_EX[i]}
+  else if(t==="o"){q="Sắp xếp: "+shuffle(ORDER[i].split(" ")).join(" / ");ans=ORDER[i].replace(/ ([?.])/,"$1");ex="Câu hỏi: từ để hỏi + trợ động từ + chủ ngữ + động từ? Câu kể: chủ ngữ + động từ + bổ ngữ."}
+  else {q="Sửa lỗi sai: "+ERR[i].s.replace(/ ([?.])/,"$1")+" (gõ từ đúng)";ans=ERR[i].c;ex="Từ sai: "+ERR[i].w+" → "+ERR[i].c+". "+ERR_EX[i]}
+  d.innerHTML=`<h3><span class="num">${n+1}</span>${q}</h3><div class="opts"></div><div class="fb"></div><div class="ex" hidden style="margin-top:8px;padding:10px;border-radius:12px;background:#fff7d6"><b>✅ Đáp án đúng:</b> ${ans}<br><b>💡 Giải thích:</b> ${ex}</div>`;
+  const show=ok=>{fb(d.querySelector(".fb"),ok,ok?"✔ Well done!":"✘ Chưa đúng rồi!");d.querySelector(".ex").hidden=false;toast(ok);if(ok)st.fixed=(st.fixed||0)+1};
+  const box=d.querySelector(".opts");
+  if(opts){opts.forEach((o,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=String.fromCharCode(65+j)+". "+o;b.onclick=()=>{if(d._done)return;d._done=1;const ok=o===ans;b.classList.add(ok?"ok":"bad");[...box.children].forEach(x=>{if(x.textContent.slice(3)===ans)x.classList.add("ok")});show(ok)};box.appendChild(b)})}
+  else{box.style.display="block";box.innerHTML=`<div class="row"><input type="text" placeholder="Gõ câu trả lời..."><button class="btn">Kiểm tra</button></div>`;const norm=s=>s.toLowerCase().replace(/\s+([?.!,])/g,"$1").replace(/\s+/g," ").trim();box.querySelector(".btn").onclick=()=>{if(d._done)return;const v=box.querySelector("input").value;if(!v.trim())return;d._done=1;show(norm(v)===norm(ans))}}
+  r.appendChild(d)});
+ scrollTo({top:0,behavior:"smooth"});
+}
+$("#retry").onclick=renderReview;
+init();
+</script>
+</body>
+</html>
